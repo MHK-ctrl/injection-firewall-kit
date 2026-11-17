@@ -7,7 +7,8 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    # 22.04 rather than -latest: the newest image no longer ships a Python 3.9 build.
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
