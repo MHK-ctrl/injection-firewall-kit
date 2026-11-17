@@ -1,0 +1,26 @@
+# Preset: permissive - read-only summariser. No tools, no secrets in the context, so the
+# worst case is a wrong summary. Still blocks exfiltration payloads because they are
+# worthless to legitimate content and always worth stopping.
+name: permissive
+description: Read-only summariser with no tools and no secrets in context.
+
+thresholds:
+  warn: 10
+  sanitize: 40
+  quarantine: 75
+  block: 95
+
+category_min_action:
+  exfiltration: block
+  delimiter_spoof: sanitize
+
+detectors:
+  disabled: []
+  severity_overrides: {}
+
+sanitize:
+  profile: minimal
+
+tool_gate:
+  require_approval: []
+  deny: []

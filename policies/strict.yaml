@@ -1,0 +1,36 @@
+# Preset: strict - an email assistant that can read private mail, send, forward and
+# delete messages. Content is treated as hostile until proven boring, thresholds are low,
+# and every irreversible tool call needs a human.
+name: strict
+description: Email assistant with send/forward tools and access to private mail.
+
+thresholds:
+  warn: 1
+  sanitize: 15
+  quarantine: 40
+  block: 70
+
+category_min_action:
+  direct_instruction_override: sanitize
+  role_hijack: sanitize
+  delimiter_spoof: block
+  hidden_text: quarantine
+  encoding_obfuscation: sanitize
+  multilingual_injection: sanitize
+  payload_splitting: quarantine
+  fake_tool_result: quarantine
+  exfiltration: block
+  tool_abuse: quarantine
+  social_engineering: quarantine
+  context_poisoning: sanitize
+
+detectors:
+  disabled: []
+  severity_overrides: {}
+
+sanitize:
+  profile: aggressive
+
+tool_gate:
+  require_approval: [send_email, forward_email, delete_message, run_shell]
+  deny: [run_shell, fs_write]

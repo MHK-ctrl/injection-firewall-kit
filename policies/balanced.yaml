@@ -1,0 +1,39 @@
+# Preset: balanced - a document / RAG reader that summarises and answers questions.
+# No side effects, no outbound tools, moderate tolerance for suspicious phrasing.
+name: balanced
+description: "Document / RAG reader: summarise and answer, no side effects."
+
+# Risk score (0-100) at which each action becomes the default.
+# Must increase: warn <= sanitize <= quarantine <= block.
+thresholds:
+  warn: 1
+  sanitize: 25
+  quarantine: 60
+  block: 85
+
+# A floor per category: the presence of this category forces at least this action,
+# even when the arithmetic lands lower. Exfiltration is always worth blocking.
+category_min_action:
+  direct_instruction_override: sanitize
+  role_hijack: sanitize
+  delimiter_spoof: block
+  hidden_text: sanitize
+  encoding_obfuscation: sanitize
+  multilingual_injection: sanitize
+  payload_splitting: sanitize
+  fake_tool_result: sanitize
+  exfiltration: block
+  tool_abuse: quarantine
+  social_engineering: quarantine
+  context_poisoning: sanitize
+
+detectors:
+  disabled: []
+  severity_overrides: {}
+
+sanitize:
+  profile: standard
+
+tool_gate:
+  require_approval: [send_email, forward_email, write_file]
+  deny: [run_shell]

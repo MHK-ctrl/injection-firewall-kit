@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MHK-ctrl/injection-firewall-kit/corpus/schema.json",
+  "title": "injection-firewall-kit corpus sample",
+  "description": "One labelled, inert sample of untrusted content. Samples must never contain real domains, credentials or product-specific exploits.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "category", "carrier", "text", "expected_label", "severity", "notes"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}-[0-9]{3}$",
+      "description": "Stable identifier. Prefix encodes the category (DIO, RHJ, DSP, HID, ENC, MLI, SPL, FTR, EXF, TAB, SOC, CPO, BEN)."
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "direct_instruction_override",
+        "role_hijack",
+        "delimiter_spoof",
+        "hidden_text",
+        "encoding_obfuscation",
+        "multilingual_injection",
+        "payload_splitting",
+        "fake_tool_result",
+        "exfiltration",
+        "tool_abuse",
+        "social_engineering",
+        "context_poisoning"
+      ],
+      "description": "Attack category. Benign look-alikes use the category they most resemble so false positives can be measured per category."
+    },
+    "carrier": {
+      "type": "string",
+      "enum": [
+        "email_body",
+        "html_page",
+        "markdown_doc",
+        "pdf_text",
+        "json_tool_output",
+        "code_comment",
+        "csv_cell",
+        "calendar_invite",
+        "filename_metadata"
+      ],
+      "description": "Where the untrusted text came from."
+    },
+    "text": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 4000,
+      "description": "The sample itself. Inert by construction: at most it asks for a canary token or a fake system prompt."
+    },
+    "expected_label": {
+      "type": "string",
+      "enum": ["attack", "benign"],
+      "description": "Ground truth about intent, independent of what the current detectors do."
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "critical"],
+      "description": "Impact if a naive model obeyed the text. For benign samples, how disruptive a false positive would be."
+    },
+    "notes": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 500,
+      "description": "What a correct defence should do, in one or two sentences."
+    }
+  }
+}
